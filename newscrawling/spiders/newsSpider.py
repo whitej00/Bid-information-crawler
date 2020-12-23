@@ -8,9 +8,6 @@ from scrapy.selector import Selector
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from twisted.internet.error import TimeoutError, TCPTimedOutError
-from twisted.internet import reactor
-from scrapy.crawler import CrawlerRunner
-from scrapy.utils.log import configure_logging
 
 path_webdriver = "C:/Aspace/Utility/Chrome Dirver/chromedriver.exe"
 
@@ -236,18 +233,8 @@ class UMEME(scrapy.Spider):
                     callback=save_pdf,
                 )   
 
-# process = CrawlerProcess(get_project_settings())
-# process.crawl(ASPOWER)
-# process.crawl(ESCOM)
-# process.crawl(UMEME)
-# process.start() # the script will block here until all crawling jobs are finished
-
-configure_logging()
-runner = CrawlerRunner()
-runner.crawl(ASPOWER)
-runner.crawl(ESCOM)
-runner.crawl(UMEME)
-d = runner.join()
-d.addBoth(lambda _: reactor.stop())
-
-reactor.run() # the script will block here until all crawling jobs are finished
+process = CrawlerProcess(get_project_settings())
+process.crawl(ASPOWER)
+process.crawl(ESCOM)
+process.crawl(UMEME)
+process.start() # the script will block here until all crawling jobs are finished
