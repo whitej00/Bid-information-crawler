@@ -2,6 +2,7 @@ import scrapy
 import time
 import datetime
 import sqlite3
+import os
 from newscrawling.items import NewscrawlingItem
 from selenium import webdriver
 from scrapy.selector import Selector
@@ -12,32 +13,43 @@ from twisted.internet.error import TimeoutError, TCPTimedOutError
 path_webdriver = "C:/Aspace/Utility/Chrome Dirver/chromedriver.exe"
 
 def save_pdf(response):
-        path = response.url.split('/')[-1]
-        with open('Files/' + path, 'wb') as f:
-            f.write(response.body)
+    path = response.url.split('/')[-1]
+    url = response.url
+    url = url.replace("'","[apos]")
+    url = url.replace('"','[quot]')
 
-        url = response.url
-        url = url.replace("'","[apos]")
-        url = url.replace('"','[quot]')
+    conn = sqlite3.connect("tender.db")
+    cur = conn.cursor()
+    
+    idSql = """SELECT id FROM 'tender' where documents like '%{0}%'""".format(path)
+    countSql = """update tender set Qty_DownDoc = Qty_DownDoc + 1 where Documents like '%{0}%'""".format(url)
+    checkSql = """select Qty_TotalDoc, Qty_DownDoc from tender where Documents like '%{0}%'""".format(url)
+    updateSql = """update tender set Down_Status = '{0}' where Documents like '%{1}%'"""
 
-        countSql = """update tender set Qty_DownDoc = Qty_DownDoc + 1 where Documents like '%{0}%'""".format(url)
-        checkSql = """select Qty_TotalDoc, Qty_DownDoc from tender where Documents like '%{0}%'""".format(url)
-        updateSql = """update tender set Down_Status = '{0}' where Documents like '%{1}%'"""
-        conn = sqlite3.connect("tender.db")
-        cur = conn.cursor()
-        cur.execute(countSql)
+    cur.execute(idSql)
+    dbId = cur.fetchall()
+    dbId = str(dbId[0][0])
+
+    if not os.path.isdir("C:/Users/wlsdk/newscrawling/Files/{0}".format(dbId)):
+        os.mkdir("C:/Users/wlsdk/newscrawling/Files/{0}".format(dbId))
+        
+    with open('Files/' + dbId + '/' + path, 'wb') as f:
+        f.write(response.body)
+  
+    cur.execute(countSql)
+    conn.commit()
+    cur.execute(checkSql)
+     
+    fetch = cur.fetchall()
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+    print(fetch)
+    
+    if fetch[0][0] == fetch[0][1]:
+        cur.execute(updateSql.format('o', response.url))
         conn.commit()
-        cur.execute(checkSql)
-         
-        fetch = cur.fetchall()
-        print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-        print(fetch)
-        if fetch[0][0] == fetch[0][1]:
-            cur.execute(updateSql.format('o', response.url))
-            conn.commit()
-        else:
-            cur.execute(updateSql.format('x', response.url))
-            conn.commit()  
+    else:
+        cur.execute(updateSql.format('x', response.url))
+        conn.commit()  
 
 def dbCheck(doc):
     conn = sqlite3.connect("tender.db")
