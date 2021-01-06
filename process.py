@@ -23,3 +23,5 @@ def run_process():
     print("@@@@@@@@@@@@@@process_kwSearch@@@@@@@@@@@@@@@@")
     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     process_kwSearch.process_kwSearch()  
+
+run_process()    
