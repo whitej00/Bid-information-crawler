@@ -16,17 +16,15 @@ class CsvPipeline(object):
                                             Down_Status TEXT,
                                             Qty_TotalDoc INTEGER,
                                             Qty_DownDoc INTEGER,
-                                            Qty_Image INTEGER,
-                                            Qty_Hocr INTEGER,
-                                            Text INTEGER
+                                            ScanDisting TEXT
                                             )""")
         self.count = 0                                    
 
     def process_item(self, item, spider):
         insertSql = """
                     insert into 
-                    tender (Company, Documents, Bid_IssuanceTime, Bid_OpenTime, InputTime, Down_Status, Qty_TotalDoc, Qty_DownDoc) 
-                    values ("{0}", "{1}", "{2}", "{3}", "{4}", "{5}", {6}, {7})
+                    tender (Company, Documents, Bid_IssuanceTime, Bid_OpenTime, InputTime, Down_Status, Qty_TotalDoc, Qty_DownDoc, ScanDisting) 
+                    values ("{0}", "{1}", "{2}", "{3}", "{4}", "{5}", {6}, {7}, "{8}")
                     """.format(
                         item['Company'],
                         item['Documents'],
@@ -36,6 +34,7 @@ class CsvPipeline(object):
                         item['Down_Status'],
                         item['Qty_TotalDoc'],
                         item['Qty_DownDoc'],
+                        item['ScanDisting'],
                         )
 
         selectSql = """select * from tender where Documents like '%{0}%'""".format(item['Documents'])

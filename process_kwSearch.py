@@ -3,7 +3,7 @@ import os
 import sqlite3
 from os.path import basename
 
-def process_kwSearch():
+def process_kwSearch(fetchall):
     cats_analogue={"TRANSFORMER":["converter","transformer"],
          "SWITCH GEARS":["switch"],
          "OLBS":["olbs","oil Immersed Loadbreak Switch","Switch","Loadbreak","Load break","breaker"],
@@ -58,16 +58,20 @@ def process_kwSearch():
          }    
 
     updateSql = """update tender set Category = '{0}' where id = '{1}'"""
-    conn = sqlite3.connect("C:/Users/wlsdk/newscrawling/tender.db")
+    conn = sqlite3.connect("/srv1/process/tender.db")
     cur = conn.cursor()
 
-    target_dir = "C:/Users/wlsdk/newscrawling/Files/*/*.txt"
-    path_names = glob.glob(target_dir, recursive=True)
+    path_names = []
+    globs = []
+    target_dir = "/srv1/process/Files/{0}/*.txt"
+    for fetch in fetchall:
+        globs = glob.glob(target_dir.format(fetch[0]), recursive=True)
+        for a in globs:
+            path_names.append(a)
 
     for path_name in path_names:
         catList = []
         print(path_name)
-        print(path_name.split('\\')[-2])
         with open(path_name, 'r', encoding='UTF8') as f:
             text = f.read()
             for key, values in cats_analogue.items():
@@ -77,6 +81,5 @@ def process_kwSearch():
 
         my_set = set(catList)
         catList = list(my_set) 
-        print(basename(path_name).split('.')[0])
-        cur.execute(updateSql.format(','.join(catList), path_name.split('\\')[-2]))
-        conn.commit()
+        cur.execute(updateSql.format(','.join(catList), path_name.split('\\')[-2].split('/')[-1]))
+        conn.commit()    

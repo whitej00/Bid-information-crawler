@@ -1,5 +1,3 @@
-import shlex
-import string
 import subprocess
 import sys
 import glob
@@ -7,8 +5,6 @@ import os
 import time
 from errno import ENOENT
 from os import environ, extsep, remove
-from PIL import Image
-from os.path import isdir
 
 def subprocess_args(include_stdout=True):
     # See https://github.com/pyinstaller/pyinstaller/wiki/Recipe-subprocess
@@ -72,10 +68,15 @@ def run_tesseract(
     #     if proc.returncode:
     #         raise TesseractError(proc.returncode, get_errors(error_string))
 
-def file_list():
-    target_dir = "C:/Users/wlsdk/newscrawling/Files/*/*.jpg" 
-    path_names = glob.glob(target_dir, recursive=True)
+def file_list(fetchall):
     i = 0
+    path_names = []
+    globs = []
+    target_dir = "/srv1/process/Files/{0}/*.jpg"
+    for fetch in fetchall:
+        globs = glob.glob(target_dir.format(fetch[0]), recursive=True)
+        for a in globs:
+            path_names.append(a)
 
     for path_name in path_names:
         i += 1
@@ -93,4 +94,4 @@ def file_list():
                 'timeout': 0,
                 'duple' : i,
             }
-        run_tesseract(**kwargs)
+        run_tesseract(**kwargs)  

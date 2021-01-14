@@ -10,7 +10,7 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from twisted.internet.error import TimeoutError, TCPTimedOutError
 
-path_webdriver = "C:/Aspace/Utility/Chrome Dirver/chromedriver.exe"
+path_webdriver = "/chromedriver"
 
 def save_pdf(response):
     path = response.url.split('/')[-1]
@@ -21,7 +21,7 @@ def save_pdf(response):
     conn = sqlite3.connect("tender.db")
     cur = conn.cursor()
     
-    idSql = """SELECT id FROM 'tender' where documents like '%{0}%'""".format(path)
+    idSql = """SELECT id FROM 'tender' where documents like '%{0}%'""".format(url)
     countSql = """update tender set Qty_DownDoc = Qty_DownDoc + 1 where Documents like '%{0}%'""".format(url)
     checkSql = """select Qty_TotalDoc, Qty_DownDoc from tender where Documents like '%{0}%'""".format(url)
     updateSql = """update tender set Down_Status = '{0}' where Documents like '%{1}%'"""
@@ -30,8 +30,8 @@ def save_pdf(response):
     dbId = cur.fetchall()
     dbId = str(dbId[0][0])
 
-    if not os.path.isdir("C:/Users/wlsdk/newscrawling/Files/{0}".format(dbId)):
-        os.mkdir("C:/Users/wlsdk/newscrawling/Files/{0}".format(dbId))
+    if not os.path.isdir("/srv1/process/Files/{0}".format(dbId)):
+        os.mkdir("/srv1/process/Files/Files/{0}".format(dbId))
         
     with open('Files/' + dbId + '/' + path, 'wb') as f:
         f.write(response.body)
@@ -45,10 +45,10 @@ def save_pdf(response):
     print(fetch)
     
     if fetch[0][0] == fetch[0][1]:
-        cur.execute(updateSql.format('o', response.url))
+        cur.execute(updateSql.format('o', url))
         conn.commit()
     else:
-        cur.execute(updateSql.format('x', response.url))
+        cur.execute(updateSql.format('x', url))
         conn.commit()  
 
 def dbCheck(doc):
@@ -64,8 +64,10 @@ class ASPOWER(scrapy.Spider):
     allowed_domains = ["www.aspower.com"]
     start_urls = ["https://www.aspower.com/aspa-procurement-01.html"]
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '1073741824',
-        'RETRY_ENABLED' : 'False',
+        'DOWNLOAD_WARNSIZE': '8000000',
+        'DOWNLOAD_TIMEOUT' : '90',
+        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
+        'RETRY_ENABLED' : 'False',   
     }
     fileDown = 0
     count = 0
@@ -119,6 +121,7 @@ class ASPOWER(scrapy.Spider):
             item['Down_Status'] = 'x'
             item['Qty_TotalDoc'] = len(urls)
             item['Qty_DownDoc'] = 0
+            item['ScanDisting'] = 'x'
                   
             fetchall = dbCheck(item['Documents'])
             if  fetchall:
@@ -148,8 +151,10 @@ class ESCOM(scrapy.Spider):
     allowed_domains = ["www.escom.mw"]
     start_urls = ["http://www.escom.mw/tender-documents.php"]
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '1073741824',
-        'RETRY_ENABLED' : 'False',
+        'DOWNLOAD_WARNSIZE': '8000000',
+        'DOWNLOAD_TIMEOUT' : '90',
+        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
+        'RETRY_ENABLED' : 'False',   
     }
     fileDown = 0
     count = 0
@@ -173,6 +178,7 @@ class ESCOM(scrapy.Spider):
             item['Down_Status'] = 'x'
             item['Qty_TotalDoc'] = 1
             item['Qty_DownDoc'] = 0
+            item['ScanDisting'] = 'x'
    
             fetchall = dbCheck(item['Documents'])
             if  fetchall:
@@ -197,8 +203,10 @@ class UMEME(scrapy.Spider):
     allowed_domains = ["www.umeme.co.ug"]
     start_urls = ["https://www.umeme.co.ug/tenders"]
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '1073741824',
-        'RETRY_ENABLED' : 'False',
+        'DOWNLOAD_WARNSIZE': '8000000',
+        'DOWNLOAD_TIMEOUT' : '90',
+        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
+        'RETRY_ENABLED' : 'False',   
     }
     fileDown = 0
     count = 0
@@ -230,6 +238,7 @@ class UMEME(scrapy.Spider):
             item['Down_Status'] = 'x'
             item['Qty_TotalDoc'] = 1
             item['Qty_DownDoc'] = 0
+            item['ScanDisting'] = 'o'
 
                
             fetchall = dbCheck(item['Documents'])
