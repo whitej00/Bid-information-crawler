@@ -1,6 +1,6 @@
 import PyPDF2
 import glob
-import os
+import processScan
 from os.path import basename, dirname
 
 def process_pdf2text(fetchall):
@@ -9,19 +9,24 @@ def process_pdf2text(fetchall):
     target_dir = "/srv1/process/Files/{0}/*.pdf"
     for fetch in fetchall:
         globs = glob.glob(target_dir.format(fetch[0]), recursive=True)
-        for a in globs:
-            path_names.append(a)
+        idenL = 0
+        for path_name in globs:
+            print(path_name)
+            iden = ""
+            with open(dirname(path_name) + '/result.txt', 'ab') as f:
+                file = open(path_name, 'rb')
+                fileReader = PyPDF2.PdfFileReader(file, strict=False)
+                fileReader.documentInfo
+                numPages = fileReader.numPages
 
-    for path_name in path_names:
-        print(path_name)
-        with open(dirname(path_name) + '/result.txt', 'ab') as f:
-            file = open(path_name, 'rb')
-            fileReader = PyPDF2.PdfFileReader(file)
-            fileReader.documentInfo
-            numPages = fileReader.numPages
+                for numPage in range(numPages):
+                    print(str(numPage+1) + '/' + str(numPages))
+                    pageObj = fileReader.getPage(numPage)
+                    text = pageObj.extractText()
+                    iden += text
+                    f.write(text.encode())     
 
-            for numPage in range(numPages):
-                print(str(numPage+1) + '/' + str(numPages))
-                pageObj = fileReader.getPage(numPage)
-                text = pageObj.extractText()
-                f.write(text.encode())
+            if not iden:
+                idenL += 1
+        if idenL > 0:
+            processScan.run_process(fetch[0])

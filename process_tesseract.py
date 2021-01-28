@@ -68,17 +68,11 @@ def run_tesseract(
     #     if proc.returncode:
     #         raise TesseractError(proc.returncode, get_errors(error_string))
 
-def file_list(fetchall):
+def file_list(fetch):
     i = 0
-    path_names = []
-    globs = []
     target_dir = "/srv1/process/Files/{0}/*.jpg"
-    for fetch in fetchall:
-        globs = glob.glob(target_dir.format(fetch[0]), recursive=True)
-        for a in globs:
-            path_names.append(a)
-
-    for path_name in path_names:
+    globs = glob.glob(target_dir.format(fetch), recursive=True)
+    for path_name in globs:
         i += 1
         print(path_name)
         dirname = os.path.dirname(path_name)

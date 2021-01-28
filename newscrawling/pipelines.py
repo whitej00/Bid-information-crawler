@@ -1,5 +1,7 @@
 import sqlite3
 
+from scrapy.exceptions import CloseSpider
+
 class CsvPipeline(object):
     def __init__(self):
         self.conn = sqlite3.connect("tender.db")
@@ -15,36 +17,38 @@ class CsvPipeline(object):
                                             Category TEXT,
                                             Down_Status TEXT,
                                             Qty_TotalDoc INTEGER,
-                                            Qty_DownDoc INTEGER,
-                                            ScanDisting TEXT
+                                            Qty_DownDoc INTEGER
                                             )""")
         self.count = 0                                    
 
     def process_item(self, item, spider):
         insertSql = """
                     insert into 
-                    tender (Company, Documents, Bid_IssuanceTime, Bid_OpenTime, InputTime, Down_Status, Qty_TotalDoc, Qty_DownDoc, ScanDisting) 
-                    values ("{0}", "{1}", "{2}", "{3}", "{4}", "{5}", {6}, {7}, "{8}")
+                    tender (Company, Documents, Bid_Descriptions, Bid_IssuanceTime, Bid_OpenTime, InputTime, Down_Status, Qty_TotalDoc, Qty_DownDoc) 
+                    values ("{0}", "{1}", "{2}", "{3}", "{4}", "{5}", "{6}", {7}, {8})
                     """.format(
                         item['Company'],
                         item['Documents'],
+                        item['Bid_Descriptions'],
                         item['Bid_IssuanceTime'],
                         item['Bid_OpenTime'],
                         item['InputTime'],
                         item['Down_Status'],
                         item['Qty_TotalDoc'],
                         item['Qty_DownDoc'],
-                        item['ScanDisting'],
                         )
 
-        selectSql = """select * from tender where Documents like '%{0}%'""".format(item['Documents'])
+        selectSql =  """select * from tender where 
+                        Documents like '%{0}%' and
+                        Bid_IssuanceTime like '%{1}%' and
+                        Bid_OpenTime like '%{2}%'
+                        """.format(item['Documents'], item['Bid_IssuanceTime'], item['Bid_OpenTime'])
 
         self.cur.execute(selectSql)
         if  self.cur.fetchall():
-            raise CloseSpider('force exit!!')
+            pass
         else:
             self.cur.execute(insertSql)
             self.conn.commit()
 
         return item  
-        

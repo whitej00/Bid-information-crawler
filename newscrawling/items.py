@@ -10,6 +10,4 @@ class NewscrawlingItem(scrapy.Item):
     Down_Status = scrapy.Field()
     Qty_TotalDoc = scrapy.Field()
     Qty_DownDoc = scrapy.Field()
-    ScanDisting = scrapy.Field()
     pass
-

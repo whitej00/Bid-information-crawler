@@ -3,16 +3,12 @@ import os
 from pdf2image import convert_from_path, pdfinfo_from_path
 from os.path import basename
 
-def process_pdf2image(fetchall):
+def process_pdf2image(fetch):
     path_names = []
     globs = []
     target_dir = "/srv1/process/Files/{0}/*.pdf"
-    for fetch in fetchall:
-        globs = glob.glob(target_dir.format(fetch[0]), recursive=True)
-        for a in globs:
-            path_names.append(a)
-
-    for path_name in path_names:
+    globs = glob.glob(target_dir.format(fetch), recursive=True)
+    for path_name in globs:
         dir_name = os.path.dirname(path_name)
         info = pdfinfo_from_path(path_name, userpw = None)
         maxPages = info["Pages"]
