@@ -13,10 +13,6 @@ from scrapy.utils.project import get_project_settings
 from scrapy.exceptions import DropItem
 from twisted.internet.error import TimeoutError, TCPTimedOutError
 from dateutil.parser import parse
-from pyvirtualdisplay import Display
-
-display = Display(visible=0, size=(1920,1080))
-display.start()
 
 path_webdriver = "/chromedriver"
 
@@ -111,7 +107,7 @@ class ASPOWER(scrapy.Spider):
             self.browser.get(response)
         else:
             self.browser.get(response.url)  
-        time.sleep(5)
+        time.sleep(10)
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
@@ -188,9 +184,7 @@ class ESCOM(scrapy.Spider):
     allowed_domains = ["www.escom.mw"]
     start_urls = ["http://www.escom.mw/tender-documents.php"]
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }
 
@@ -249,9 +243,7 @@ class UMEME(scrapy.Spider):
     allowed_domains = ["www.umeme.co.ug"]
     start_urls = ["https://www.umeme.co.ug/tenders"]
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }
 
@@ -261,7 +253,7 @@ class UMEME(scrapy.Spider):
 
     def parse(self, response):
         self.browser.get(response.url)
-        time.sleep(5)  
+        time.sleep(10)  
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
@@ -311,9 +303,7 @@ class GUAM(scrapy.Spider):
     allowed_domains = ["www.guampowerauthority.com"]
     start_urls = ['http://guampowerauthority.com/gpa_authority/procurement/gpa_current_rfps.php']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }
 
@@ -373,9 +363,7 @@ class HESCO(scrapy.Spider):
     allowed_domains=["www.hesco.gov.pk"]
     start_urls = ['http://www.hesco.gov.pk/NewsMedia.asp?type=02']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }
 
@@ -434,9 +422,7 @@ class KENYA(scrapy.Spider):
     # allowed_domains=["www.kplc.co.ke"]
     start_urls = ['https://kplc.co.ke/category/view/41/tender-documents? page=1']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }
     def __init__(self):
@@ -494,9 +480,7 @@ class MOEE(scrapy.Spider):
     allowed_domains=["www.moee.gov.mm"]
     start_urls = ['http://www.moee.gov.mm/en/ignite/page/62']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }
     def __init__(self):
@@ -552,21 +536,18 @@ class NPC(scrapy.Spider):
     # allowed_domains=["www.napocor.gov.ph"]
     start_urls = ['https://www.napocor.gov.ph/BCSD/bids.php']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }        
 
     def __init__(self):
         scrapy.Spider.__init__(self)
         self.browser = webdriver.Chrome(path_webdriver)
-        self.ids_seen = set()
         self.count = 0
 
     def parse(self, response):
         self.browser.get(response.url)
-        time.sleep(5)  
+        time.sleep(10)  
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
@@ -624,9 +605,7 @@ class APSCL(scrapy.Spider):
     allowed_domains = ["www.apscl.gov.bd"]
     start_urls = ['http://www.apscl.gov.bd/site/view/tenders_type/%E0%A6%87-%E0%A6%9C%E0%A6%BF%E0%A6%AA%E0%A6%BF//-']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }    
 
@@ -636,7 +615,7 @@ class APSCL(scrapy.Spider):
 
     def parse(self, response):
         self.browser.get(response.url)
-        time.sleep(5)  
+        time.sleep(10)  
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
@@ -690,9 +669,7 @@ class DPDC(scrapy.Spider):
     allowed_domains = ["www.dpdc.org.bd"]
     start_urls = ['https://www.dpdc.org.bd/page/view/36']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }    
 
@@ -702,7 +679,7 @@ class DPDC(scrapy.Spider):
 
     def parse(self, response):
         self.browser.get(response.url)
-        time.sleep(5)  
+        time.sleep(10)  
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
@@ -756,9 +733,7 @@ class BREB(scrapy.Spider):#일부날짜안됨 접속안됨
     allowed_domains = ["www.reb.gov.bd"]
     start_urls = ['http://www.reb.gov.bd/site/page/0db00bbf-1697-4a4e-8935-73d78c84094b']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }    
 
@@ -769,7 +744,7 @@ class BREB(scrapy.Spider):#일부날짜안됨 접속안됨
 
     def parse(self, response):
         self.browser.get(response.url)
-        time.sleep(5)  
+        time.sleep(10)  
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
@@ -827,9 +802,7 @@ class PBS(scrapy.Spider):#접속안됨
     allowed_domains = ["www.reb.gov.bd"]
     start_urls = ['http://www.reb.gov.bd/site/page/d41ba549-d6f1-4ec5-9630-bcfe32e61d46/-']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }    
 
@@ -840,7 +813,7 @@ class PBS(scrapy.Spider):#접속안됨
 
     def parse(self, response):
         self.browser.get(response.url)
-        time.sleep(5)  
+        time.sleep(10)  
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
@@ -895,9 +868,7 @@ class WZPDCL_local(scrapy.Spider):#일부날짜안됨 접속안됨
     allowed_domains = ["www.wzpdcl.org.bd"]
     start_urls = ['http://www.wzpdcl.org.bd/site/view/tenders_type/স্থানীয়/-']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }    
 
@@ -907,7 +878,7 @@ class WZPDCL_local(scrapy.Spider):#일부날짜안됨 접속안됨
 
     def parse(self, response):
         self.browser.get(response.url)
-        time.sleep(5)  
+        time.sleep(10)  
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
@@ -960,9 +931,7 @@ class WZPDCL_international(scrapy.Spider):#일부날짜안됨 접속안됨
     allowed_domains = ["www.wzpdcl.org.bd"]
     start_urls = ['http://www.wzpdcl.org.bd/site/view/tenders_type/আন্তর্জাতিক/-']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }    
 
@@ -972,7 +941,7 @@ class WZPDCL_international(scrapy.Spider):#일부날짜안됨 접속안됨
 
     def parse(self, response):
         self.browser.get(response.url)
-        time.sleep(5)  
+        time.sleep(10)  
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
@@ -1027,9 +996,7 @@ class NESCO_LOCAL(scrapy.Spider):#일부날짜안됨
     allowed_domains = ["www.nesco.gov.bd"]
     start_urls = ['http://nesco.gov.bd/site/view/tenders_type/%E0%A6%B8%E0%A7%8D%E0%A6%A5%E0%A6%BE%E0%A6%A8%E0%A7%80%E0%A7%9F/-']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }    
 
@@ -1039,7 +1006,7 @@ class NESCO_LOCAL(scrapy.Spider):#일부날짜안됨
 
     def parse(self, response):
         self.browser.get(response.url)
-        time.sleep(5)  
+        time.sleep(10)  
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
@@ -1093,9 +1060,7 @@ class NESCO_international(scrapy.Spider):#일부날짜안됨
     allowed_domains = ["www.nesco.gov.bd"]
     start_urls = ['http://nesco.gov.bd/site/view/tenders_type/%E0%A6%86%E0%A6%A8%E0%A7%8D%E0%A6%A4%E0%A6%B0%E0%A7%8D%E0%A6%9C%E0%A6%BE%E0%A6%A4%E0%A6%BF%E0%A6%95/-']
     custom_settings = {
-        'DOWNLOAD_WARNSIZE': '8000000',
         'DOWNLOAD_TIMEOUT' : '90',
-        'DOWNLOAD_MAXSIZE' : '11000000',#10mb..
         'RETRY_ENABLED' : 'False',   
     }    
 
@@ -1105,7 +1070,7 @@ class NESCO_international(scrapy.Spider):#일부날짜안됨
 
     def parse(self, response):
         self.browser.get(response.url)
-        time.sleep(5)  
+        time.sleep(10)  
 
         html = self.browser.find_element_by_xpath('//*').get_attribute('outerHTML')
         selector = Selector(text=html)
