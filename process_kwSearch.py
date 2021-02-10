@@ -27,7 +27,7 @@ def process_kwSearch(fetchall):
 
     path_names = []
     globs = []
-    target_dir = "/srv1/process/Files/{0}/*.txt"
+    target_dir = "/srv/ucproject/bid/static/bid/Files/{0}/*.txt"
     for fetch in fetchall:
         globs = glob.glob(target_dir.format(fetch[0]), recursive=True)
         for a in globs:
@@ -45,5 +45,5 @@ def process_kwSearch(fetchall):
 
         my_set = set(catList)
         catList = list(my_set) 
-        cur.execute(updateSql.format(','.join(catList), path_name.split('\\')[-2].split('/')[-1]))
+        cur.execute(updateSql.format(','.join(catList), path_name.split('/')[-2]))
         conn.commit()    

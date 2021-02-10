@@ -1,4 +1,4 @@
-import process_pdf2image, process_tesseract, process_textCombine, process_kwSearch, process_pdf2text
+import process_pdf2image, process_tesseract, process_textCombine, process_kwSearch, process_pdf2text, process_email
 import time
 import os
 import sqlite3
@@ -23,4 +23,6 @@ def run_process():
     time.sleep(3)
     # start process_kwSearch
     process_kwSearch.process_kwSearch(fetchall)
+    # start process_emali
+    process_email.process_email()
 run_process()    

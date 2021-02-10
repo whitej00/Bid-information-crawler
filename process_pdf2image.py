@@ -6,7 +6,7 @@ from os.path import basename
 def process_pdf2image(fetch):
     path_names = []
     globs = []
-    target_dir = "/srv1/process/Files/{0}/*.pdf"
+    target_dir = "/srv/ucproject/bid/static/bid/Files/{0}/*.pdf"
     globs = glob.glob(target_dir.format(fetch), recursive=True)
     for path_name in globs:
         dir_name = os.path.dirname(path_name)

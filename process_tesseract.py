@@ -61,7 +61,7 @@ def run_tesseract(
             raise e
         raise TesseractNotFoundError()
     
-    if duple % 3 == 0 and not proc.wait(timeout = None):
+    if duple % 1 == 0 and not proc.wait(timeout = None):
         pass
 
     # with timeout_manager(proc, timeout) as error_string:
@@ -70,7 +70,7 @@ def run_tesseract(
 
 def file_list(fetch):
     i = 0
-    target_dir = "/srv1/process/Files/{0}/*.jpg"
+    target_dir = "/srv/ucproject/bid/static/bid/Files/{0}/*.jpg"
     globs = glob.glob(target_dir.format(fetch), recursive=True)
     for path_name in globs:
         i += 1

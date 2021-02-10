@@ -6,7 +6,7 @@ from os.path import basename, dirname
 def process_pdf2text(fetchall):
     path_names = []
     globs = []
-    target_dir = "/srv1/process/Files/{0}/*.pdf"
+    target_dir = "/srv/ucproject/bid/static/bid/Files/{0}/*.pdf"
     for fetch in fetchall:
         globs = glob.glob(target_dir.format(fetch[0]), recursive=True)
         idenL = 0

@@ -3,7 +3,7 @@ import os
 from os.path import basename, dirname
 
 def process_textCombine(fetchall):
-    target_dir = "/srv1/process/Files/{0}"
+    target_dir = "/srv/ucproject/bid/static/bid/Files/{0}"
     for fetch in fetchall:  
         if os.path.isdir(target_dir.format(str(fetch[0]))) == True:
             path_names = glob.glob(target_dir.format(str(fetch[0]) + "/*.txt"), recursive=True)
